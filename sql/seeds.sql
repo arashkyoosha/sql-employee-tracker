@@ -14,18 +14,11 @@ VALUE ("BDR", 65000, 101),
 ("Cusomer Success Specialist", 60000, 401);
 
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Brian", "Clark", 1, 3);
-INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Jane", "Jackson", 2, 1);
-INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Kate", "Miller", 3, null);
-INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Alex", "Martin", 4, 3);
-INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Sheri", "Barton", 5, null);
-INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Gary", "Lewis", 2, null);
-INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Tom", "Tucker", 4, 7);
-INSERT INTO employee (first_name, last_name, role_id, manager_id)
-VALUES ("Kristin", "Garret", 1, 2);
+VALUE ("Brian", "Clark", 1, 3),
+("Jane", "Jackson", 2, 1),
+("Kate", "Miller", 3, null),
+("Alex", "Martin", 4, 3),
+("Sheri", "Barton", 5, null),
+("Gary", "Lewis", 2, null),
+("Tom", "Tucker", 4, 7),
+("Kristin", "Garret", 1, 2);
