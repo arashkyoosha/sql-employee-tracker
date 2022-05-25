@@ -1,21 +1,21 @@
 const mysql = require("mysql2");
 const inquirer = require("inquirer");
-const consTable = require("console.table");
+const constable = require("console.table");
 
-const connection = mysql.createConnection({
+const dbConnection = mysql.createConnection({
     host: "localhost",
     user: "root",
     password: "root",
     database: "mainDB",
 });
 
-connection.connect(function (err) {
-    if (err) throw err;
+dbConnection.connect(function (err) {
+  if (err) throw err;
 
-    mainMenu();
+  mainMenu();
 });
 
-function mainMenu() {
+const mainMenu = () => {
     inquirer
         .prompt({
             type: "list",
@@ -31,7 +31,7 @@ function mainMenu() {
                 "Exit",
             ],
         })
-        .then(function ({ option }) {
+        .then( ({ option }) => {
             switch (option) {
                 case "View All Employees":
                     viewEmployee();
@@ -58,16 +58,16 @@ function mainMenu() {
                     break;
 
                 case "Exit":
-                    connection.end();
+                    dbConnection.end();
                     break;
             }
         });
 }
 
-function viewEmployee() {
+const viewEmployee = () => {
     var query = `SELECT * FROM employee`;
 
-    connection.query(query, function (err, res) {
+    dbConnection.query(query, function (err, res) {
         if (err) throw err;
 
         console.table(res);
@@ -76,50 +76,50 @@ function viewEmployee() {
     });
 }
 
-function viewDepartmet() {
+const viewDepartmet = () => {
     var query = `SELECT * FROM department`;
 
-    connection.query(query, function (err, res) {
-        if (err) throw err;
+    dbConnection.query(query, function (err, res) {
+      if (err) throw err;
 
-        console.table(res);
+      console.table(res);
 
-        mainMenu();
+      mainMenu();
     });
 }
 
-function viewRole() {
+const viewRole = () => {
     var query = `SELECT * FROM role`;
 
-    connection.query(query, function (err, res) {
-        if (err) throw err;
+    dbConnection.query(query, function (err, res) {
+      if (err) throw err;
 
-        console.table(res);
+      console.table(res);
 
-        mainMenu();
+      mainMenu();
     });
 }
 
-function addEmployee() {
+const addEmployee = () => {
     var query = `SELECT r.id, r.title, r.salary
       FROM role r`;
 
-    connection.query(query, function (err, res) {
-        if (err) throw err;
+    dbConnection.query(query, function (err, res) {
+      if (err) throw err;
 
-        const roleChoices = res.map(({ id, title, salary }) => ({
-            value: id,
-            title: `${title}`,
-            salary: `${salary}`,
-        }));
+      const roleChoices = res.map(({ id, title, salary }) => ({
+        value: id,
+        title: `${title}`,
+        salary: `${salary}`,
+      }));
 
-        console.table(res);
+      console.table(res);
 
-        promptInsert(roleChoices);
+      promptInsert(roleChoices);
     });
 }
 
-function promptInsert(roleChoices) {
+const promptInsert = (roleChoices) => {
     inquirer
         .prompt([
             {
@@ -139,35 +139,35 @@ function promptInsert(roleChoices) {
                 choices: roleChoices,
             },
         ])
-        .then(function (answer) {
+        .then( (answer) => {
             console.log(answer);
 
             var query = `INSERT INTO employee SET ?`;
 
-            connection.query(
-                query,
-                {
-                    first_name: answer.first_name,
-                    last_name: answer.last_name,
-                    role_id: answer.roleId,
-                    manager_id: answer.managerId,
-                },
-                function (err, res) {
-                    if (err) throw err;
+            dbConnection.query(
+              query,
+              {
+                first_name: answer.first_name,
+                last_name: answer.last_name,
+                role_id: answer.roleId,
+                manager_id: answer.managerId,
+              },
+              function (err, res) {
+                if (err) throw err;
 
-                    console.table(res);
+                console.table(res);
 
-                    mainMenu();
-                }
+                mainMenu();
+              }
             );
         });
 }
 
-function updateEmployeeRole() {
+const updateEmployeeRole = () => {
     employeeArray();
 }
 
-function employeeArray() {
+const employeeArray = () => {
     var query = `SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary, CONCAT(m.first_name, ' ', m.last_name) AS manager
   FROM employee e
   JOIN role r
@@ -177,41 +177,41 @@ function employeeArray() {
   JOIN employee m
 	ON m.id = e.manager_id`;
 
-    connection.query(query, function (err, res) {
-        if (err) throw err;
+    dbConnection.query(query, function (err, res) {
+      if (err) throw err;
 
-        const employeeChoices = res.map(({ id, first_name, last_name }) => ({
-            value: id,
-            name: `${first_name} ${last_name}`,
-        }));
+      const employeeChoices = res.map(({ id, first_name, last_name }) => ({
+        value: id,
+        name: `${first_name} ${last_name}`,
+      }));
 
-        console.table(res);
+      console.table(res);
 
-        roleArray(employeeChoices);
+      roleArray(employeeChoices);
     });
 }
 
-function roleArray(employeeChoices) {
+const roleArray = (employeeChoices) => {
     var query = `SELECT r.id, r.title, r.salary
   FROM role r`;
     let roleChoices;
 
-    connection.query(query, function (err, res) {
-        if (err) throw err;
+    dbConnection.query(query, function (err, res) {
+      if (err) throw err;
 
-        roleChoices = res.map(({ id, title, salary }) => ({
-            value: id,
-            title: `${title}`,
-            salary: `${salary}`,
-        }));
+      roleChoices = res.map(({ id, title, salary }) => ({
+        value: id,
+        title: `${title}`,
+        salary: `${salary}`,
+      }));
 
-        console.table(res);
+      console.table(res);
 
-        promptEmployeeRole(employeeChoices, roleChoices);
+      promptEmployeeRole(employeeChoices, roleChoices);
     });
 }
 
-function promptEmployeeRole(employeeChoices, roleChoices) {
+const promptEmployeeRole = (employeeChoices, roleChoices) => {
     inquirer
         .prompt([
             {
@@ -227,24 +227,24 @@ function promptEmployeeRole(employeeChoices, roleChoices) {
                 choices: roleChoices,
             },
         ])
-        .then(function (answer) {
+        .then( (answer) => {
             var query = `UPDATE employee SET role_id = ? WHERE id = ?`;
 
-            connection.query(
-                query,
-                [answer.roleId, answer.employeeId],
-                function (err, res) {
-                    if (err) throw err;
+            dbConnection.query(
+              query,
+              [answer.roleId, answer.employeeId],
+              function (err, res) {
+                if (err) throw err;
 
-                    console.table(res);
+                console.table(res);
 
-                    mainMenu();
-                }
+                mainMenu();
+              }
             );
         });
 }
 
-function addRole() {
+const addRole = () => {
     var query = `SELECT d.id, d.name, r.salary AS budget
     FROM employee e
     JOIN role r
@@ -253,22 +253,22 @@ function addRole() {
     ON d.id = r.department_id
     GROUP BY d.id, d.name`;
 
-    connection.query(query, function (err, res) {
-        if (err) throw err;
+    dbConnection.query(query, function (err, res) {
+      if (err) throw err;
 
-        const departmentChoices = res.map(({ id, name }) => ({
-            value: id,
-            name: `${id} ${name}`,
-        }));
+      const departmentChoices = res.map(({ id, name }) => ({
+        value: id,
+        name: `${id} ${name}`,
+      }));
 
-        console.table(res);
-        console.log("Department array!");
+      console.table(res);
+      console.log("Department array!");
 
-        promptAddRole(departmentChoices);
+      promptAddRole(departmentChoices);
     });
 }
 
-function promptAddRole(departmentChoices) {
+const promptAddRole = (departmentChoices) => {
     inquirer
         .prompt([
             {
@@ -288,23 +288,23 @@ function promptAddRole(departmentChoices) {
                 choices: departmentChoices,
             },
         ])
-        .then(function (answer) {
+        .then( (answer) => {
             var query = `INSERT INTO role SET ?`;
 
-            connection.query(
-                query,
-                {
-                    title: answer.title,
-                    salary: answer.salary,
-                    department_id: answer.departmentId,
-                },
-                function (err, res) {
-                    if (err) throw err;
+            dbConnection.query(
+              query,
+              {
+                title: answer.title,
+                salary: answer.salary,
+                department_id: answer.departmentId,
+              },
+              function (err, res) {
+                if (err) throw err;
 
-                    console.table(res);
+                console.table(res);
 
-                    mainMenu();
-                }
+                mainMenu();
+              }
             );
         });
 }
