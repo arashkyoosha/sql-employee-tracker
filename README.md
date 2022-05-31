@@ -14,7 +14,7 @@ Our assignment this week is to build a command-line application from scratch to 
 
 ## Live Demo
 
-Here's a link to the demo:
+Here's a link to the demo:  <https://youtu.be/5FN1Zx812wg>
 
 ## Contributors
 

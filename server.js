@@ -58,7 +58,15 @@ const mainMenu = () => {
 };
 
 const viewEmployee = () => {
-    var query = `SELECT * FROM employee`;
+    var query = `SELECT e.id, e.first_name, e.last_name, r.title, d.name AS department, r.salary, CONCAT(m.first_name, ' ', m.last_name) AS manager
+  FROM employee e
+  LEFT JOIN role r
+	ON e.role_id = r.id
+  LEFT JOIN department d
+  ON d.id = r.department_id
+  LEFT JOIN employee m
+	ON m.id = e.manager_id`
+
     dbConnection.query(query, function (err, res) {
         if (err) throw err;
         console.table(res);
@@ -67,7 +75,8 @@ const viewEmployee = () => {
 };
 
 const viewDepartmet = () => {
-    var query = `SELECT * FROM department`;
+    var query = `SELECT * FROM department`
+
     dbConnection.query(query, function (err, res) {
         if (err) throw err;
         console.table(res);
@@ -76,7 +85,7 @@ const viewDepartmet = () => {
 };
 
 const viewRole = () => {
-    var query = `SELECT * FROM role`;
+    var query = `SELECT * FROM role`
     dbConnection.query(query, function (err, res) {
         if (err) throw err;
         console.table(res);
@@ -85,7 +94,7 @@ const viewRole = () => {
 };
 
 const addEmployee = () => {
-    var query = `SELECT r.id, r.title, r.salary FROM role r`;
+    var query = `SELECT r.id, r.title, r.salary FROM role r`
 
     dbConnection.query(query, function (err, res) {
         if (err) throw err;
@@ -122,7 +131,7 @@ const promptInsert = (roleChoices) => {
         ])
         .then((answer) => {
             console.log(answer);
-            var query = `INSERT INTO employee SET ?`;
+            var query = `INSERT INTO employee SET ?`
 
             dbConnection.query(
                 query,
@@ -154,7 +163,7 @@ const employeeArray = () => {
   JOIN department d
   ON d.id = r.department_id
   JOIN employee m
-	ON m.id = e.manager_id`;
+	ON m.id = e.manager_id`
 
     dbConnection.query(query, function (err, res) {
         if (err) throw err;
@@ -171,7 +180,7 @@ const employeeArray = () => {
 
 const roleArray = (employeeChoices) => {
     var query = `SELECT r.id, r.title, r.salary
-  FROM role r`;
+  FROM role r`
     let roleChoices;
 
     dbConnection.query(query, function (err, res) {
@@ -205,7 +214,7 @@ const promptEmployeeRole = (employeeChoices, roleChoices) => {
             },
         ])
         .then((answer) => {
-            var query = `UPDATE employee SET role_id = ? WHERE id = ?`;
+            var query = `UPDATE employee SET role_id = ? WHERE id = ?`
 
             dbConnection.query(
                 query,
@@ -227,7 +236,7 @@ const addRole = () => {
     ON e.role_id = r.id
     JOIN department d
     ON d.id = r.department_id
-    GROUP BY d.id, d.name`;
+    GROUP BY d.id, d.name`
 
     dbConnection.query(query, function (err, res) {
         if (err) throw err;
@@ -263,7 +272,7 @@ const promptAddRole = (departmentChoices) => {
             },
         ])
         .then((answer) => {
-            var query = `INSERT INTO role SET ?`;
+            var query = `INSERT INTO role SET ?`
 
             dbConnection.query(
                 query,
